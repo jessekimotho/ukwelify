@@ -32,12 +32,17 @@ conn.commit()
 # === Scrape Tweets from Nitter ===
 def get_latest_tweets(username, limit=15):
     url = f"https://nitter.net/{username}"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    tweet_divs = soup.select('div.timeline-item .tweet-content')
-    raw_tweets = [div.text.strip() for div in tweet_divs]
-    tweets = [t for t in raw_tweets if len(t) > 20][:limit]
-    return tweets
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        tweet_divs = soup.select('div.timeline-item .tweet-content')
+        raw_tweets = [div.text.strip() for div in tweet_divs]
+        tweets = [t for t in raw_tweets if len(t) > 20][:limit]
+        return tweets
+    except Exception as e:
+        print(f"Error scraping tweets: {e}")
+        return []
 
 # === Estimate Token Usage ===
 def estimate_token_count(tweets):
@@ -51,7 +56,7 @@ def analyze_user(username, tweets, metadata):
 
     openai.api_key = OPENAI_API_KEY
     system_prompt = (
-        "You are FichuaBot, a savvy bot that detects suspicious Twitter behavior.\n"
+        "You are Ukwelify, a savvy system that detects suspicious Twitter behavior and coordinated influence activity.\n"
         "You reply in a casual, smart, 1–5 tweet thread format."
     )
     user_prompt = f"""Analyze this user:
@@ -85,8 +90,22 @@ def post_to_typefully(thread_text):
         "threadify": True,
         "share": True
     }
-    response = requests.post(url, json=payload, headers=headers)
-    return response.json()
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"Error posting to Typefully: {e}")
+        return {"error": str(e)}
+
+# === Health Check Route ===
+@app.route("/", methods=["GET"])
+def index():
+    return "✅ Ukwelify is live!", 200
+
+@app.route("/healthz", methods=["GET"])
+def health_check():
+    return "OK", 200
 
 # === Main Webhook Route ===
 @app.route("/webhook", methods=["POST"])
