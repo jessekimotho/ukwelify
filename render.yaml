@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ukwelify
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "flask run --host=0.0.0.0 --port=10000"
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: TYPEFULLY_API_KEY
+        sync: false
