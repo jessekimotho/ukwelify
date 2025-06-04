@@ -1,6 +1,6 @@
 # Ukwelify
 
-**Ukwelify** is an automated truth analyzer for Twitter/X. It scans replies and mentions to `@fichuabot`, scrapes the target account’s recent activity, and uses OpenAI to generate an insightful thread about the user's behavior, tone, and patterns.
+**Ukwelify** is an automated truth analyzer for Twitter/X. It scans replies and mentions to `@ukwelify`, scrapes the target account’s recent activity, and uses OpenAI to generate an insightful thread about the user's behavior, tone, and patterns.
 
 > *"Ukweli" means "truth" in Swahili — Ukwelify reveals it.*
 
@@ -8,7 +8,7 @@
 
 ### 🔍 What It Does
 
-- Monitors mentions of `@fichuabot` for commands like `@analyze`
+- Monitors mentions of `@ukwelify` for commands like `@analyze`
 - Scrapes target accounts using Nitter
 - Analyzes tweet history using OpenAI (GPT-4o)
 - Posts a response thread via Typefully
